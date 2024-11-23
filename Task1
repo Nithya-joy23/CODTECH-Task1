@@ -1,0 +1,46 @@
+#necessary files are imported
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# loading the dataset
+from sklearn.datasets import load_iris
+iris_data = load_iris()
+df = pd.DataFrame(iris_data.data, columns=iris_data.feature_names)
+df['target'] = iris_data.target
+df['species'] = df['target'].apply(lambda x: iris_data.target_names[x])
+print("Dataset Shape:", df.shape)
+print("\nDataset Info:")
+print(df.info())
+print("\nDescriptive Statistics:")
+print(df.describe())
+plt.figure(figsize=(12, 6))
+df.iloc[:, :-2].hist(bins=15, figsize=(12, 6), layout=(2, 2), color='skyblue', edgecolor='black')
+plt.tight_layout()
+plt.show()
+
+# Boxplots
+plt.figure(figsize=(12, 6))
+for i, col in enumerate(df.columns[:-2]):
+    plt.subplot(2, 2, i + 1)
+    sns.boxplot(x=df[col], color='lightgreen')
+    plt.title(f'Boxplot of {col}')
+plt.tight_layout()
+plt.show()
+
+# scatter plots
+sns.pairplot(df, hue='species', diag_kind='hist')
+plt.show()
+
+# Correlation Heatmap
+corr = df.iloc[:, :-2].corr()
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f", square=True)
+plt.title('Feature Correlation Heatmap')
+plt.show()
+print("\nKey Insights:")
+print("- Distribution plots help identify skewness in data.")
+print("- Boxplots highlight potential outliers.")
+print("- Heatmap shows strong correlation between petal length and petal width.")
+print("- Pairplot visualizes clear separability between species.")
